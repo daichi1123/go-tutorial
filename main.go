@@ -33,13 +33,17 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
-func main() {
-	// p1で構造体の情報を記述していくアドレスを指定してそのアドレスの値を定義している
-	p1 := &Page{Title: "test", Body: []byte("this is a sample Page")}
-	// そしてそのp1に対してsaveメソッドを使用する
-	p1.save()
+// http.Requestはアクセスした際の値が入っている // ResponseWriter wに対してresponseするものを返す
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	// URLのpath情報が取れる
+	title := r.URL.Path[len("/view/"):]
+	p, _ := loadPage(title)
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+}
 
-	// databaseに入っている中身をloadPageで取ってくる
-	p2, _ := loadPage(p1.Title)
-	fmt.Println(string(p2.Body))
+func main() {
+	http.HandleFunc("/view/", viewHandler)
+	// nilを選択をするとデフォルトを返してくれる
+	// ListenAndServe nilにするとデフォルトでPageNotFoundが出されるのでPageNotFoundが返される前にpathを指定をしないといけない
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
