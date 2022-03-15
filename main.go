@@ -33,6 +33,14 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
+// http.Requestはアクセスした際の値が入っている // ResponseWriter wに対してresponseするものを返す
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	// URLのpath情報が取れる
+	title := r.URL.Path[len("/view/"):]
+	p, _ := loadPage(title)
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+}
+
 func main() {
 	http.HandleFunc("/view/", viewHandler)
 	// nilを選択をするとデフォルトを返してくれる
