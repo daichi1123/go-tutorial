@@ -57,8 +57,19 @@ func init() {
 	}
 }
 
+
 func main() {
-	fmt.Printf("%T %v\n", Config.Port, Config.Port)
-	fmt.Printf("%T %v\n", Config.DbName, Config.DbName)
-	fmt.Printf("%T %v\n", Config.SQLDriver, Config.SQLDriver)
+// http.Requestはアクセスした際の値が入っている // ResponseWriter wに対してresponseするものを返す
+func viewHandler(w http.ResponseWriter, r *http.Request) {
+	// URLのpath情報が取れる
+	title := r.URL.Path[len("/view/"):]
+	p, _ := loadPage(title)
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+}
+
+func main() {
+	http.HandleFunc("/view/", viewHandler)
+	// nilを選択をするとデフォルトを返してくれる
+	// ListenAndServe nilにするとデフォルトでPageNotFoundが出されるのでPageNotFoundが返される前にpathを指定をしないといけない
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
