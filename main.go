@@ -22,6 +22,28 @@ type ConfigList struct {
 // グローバルスコープで変数定義をしておくことによりmain関数スコープ内でも変数にアクセスできる様にしているのではないだろうか
 var Config ConfigList
 
+// example func xxx (引数) (戻り値の型){}
+/*
+	func swap(x, y string) (string, string) {
+		return x, y
+	}
+*/
+
+/*
+	複数の変数名を一気に定義することが可能
+
+	下記コードのように戻り値に名前をつけることが可能
+	この様にすることにより関数の最初に定義した変数名として使用することが可能になる
+	func split(sum int) (x, y int) {
+		x = sum * 4 / 9
+		y = sum - x
+		return
+	}
+	func xx() {
+		fmt.Println(split(17))
+	}
+*/
+
 // 1番先に呼ばれる関数になる
 func init() {
 	// fileを読み込む
